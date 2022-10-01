@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("react-dom"), require("react"), require("react-dom/server"));
+		module.exports = factory(require("react-dom"), require("react"), require("react-dom/server"), require("react-dom/client"));
 	else if(typeof define === 'function' && define.amd)
-		define(["react-dom", "react", "react-dom/server"], factory);
+		define(["react-dom", "react", "react-dom/server", "react-dom/client"], factory);
 	else if(typeof exports === 'object')
-		exports["ReactRailsUJS"] = factory(require("react-dom"), require("react"), require("react-dom/server"));
+		exports["ReactRailsUJS"] = factory(require("react-dom"), require("react"), require("react-dom/server"), require("react-dom/client"));
 	else
-		root["ReactRailsUJS"] = factory(root["ReactDOM"], root["React"], root["ReactDOMServer"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_5__, __WEBPACK_EXTERNAL_MODULE_6__) {
+		root["ReactRailsUJS"] = factory(root["ReactDOM"], root["React"], root["ReactDOMServer"], root["ReactDOMClient"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_5__, __WEBPACK_EXTERNAL_MODULE_6__, __WEBPACK_EXTERNAL_MODULE_14__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -210,6 +210,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["reactHydrate"] = reactHydrate;
 /* harmony export (immutable) */ __webpack_exports__["createReactRootLike"] = createReactRootLike;
 const ReactDOM = __webpack_require__(1)
+let createRoot = null
+const ReactDOMClient = __webpack_require__(14)
+createRoot = ReactDOMClient.createRoot
 
 function supportsHydration() {
   return typeof ReactDOM.hydrate === "function" || typeof ReactDOM.hydrateRoot === "function"
@@ -224,7 +227,7 @@ function reactHydrate(node, component) {
 }
 
 function createReactRootLike(node) {
-  return ReactDOM.createRoot ? ReactDOM.createRoot(node) : legacyReactRootLike(node)
+  return createRoot ? createRoot(node) : legacyReactRootLike(node)
 }
 
 function legacyReactRootLike(node) {
@@ -555,6 +558,12 @@ module.exports = function(reqctx) {
   }
 }
 
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_14__;
 
 /***/ })
 /******/ ]);

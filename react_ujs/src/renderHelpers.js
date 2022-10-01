@@ -1,4 +1,7 @@
 const ReactDOM = require("react-dom")
+let createRoot = null
+const ReactDOMClient = require("react-dom/client")
+createRoot = ReactDOMClient.createRoot
 
 export function supportsHydration() {
   return typeof ReactDOM.hydrate === "function" || typeof ReactDOM.hydrateRoot === "function"
@@ -13,7 +16,7 @@ export function reactHydrate(node, component) {
 }
 
 export function createReactRootLike(node) {
-  return ReactDOM.createRoot ? ReactDOM.createRoot(node) : legacyReactRootLike(node)
+  return createRoot ? createRoot(node) : legacyReactRootLike(node)
 }
 
 function legacyReactRootLike(node) {

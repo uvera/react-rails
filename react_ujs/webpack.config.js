@@ -25,6 +25,12 @@ module.exports = {
       commonjs2: 'react-dom/server',
       commonjs: 'react-dom/server',
       amd: 'react-dom/server'
+    },
+    'react-dom/client': {
+      root: 'ReactDOMClient',
+      commonjs2: 'react-dom/client',
+      commonjs: 'react-dom/client',
+      amd: 'react-dom/client'
     }
   }
 };
