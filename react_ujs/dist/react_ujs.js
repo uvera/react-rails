@@ -1,10 +1,10 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("react-dom"), require("react"), require("react-dom/server"), require("react-dom/client"));
+		module.exports = factory(require("react-dom"), require("react"), require("react-dom/server"), (function webpackLoadOptionalExternalModule() { try { return require("react-dom/client"); } catch(e) {} }()));
 	else if(typeof define === 'function' && define.amd)
 		define(["react-dom", "react", "react-dom/server", "react-dom/client"], factory);
 	else if(typeof exports === 'object')
-		exports["ReactRailsUJS"] = factory(require("react-dom"), require("react"), require("react-dom/server"), require("react-dom/client"));
+		exports["ReactRailsUJS"] = factory(require("react-dom"), require("react"), require("react-dom/server"), (function webpackLoadOptionalExternalModule() { try { return require("react-dom/client"); } catch(e) {} }()));
 	else
 		root["ReactRailsUJS"] = factory(root["ReactDOM"], root["React"], root["ReactDOMServer"], root["ReactDOMClient"]);
 })(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_5__, __WEBPACK_EXTERNAL_MODULE_6__, __WEBPACK_EXTERNAL_MODULE_14__) {
@@ -210,24 +210,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["reactHydrate"] = reactHydrate;
 /* harmony export (immutable) */ __webpack_exports__["createReactRootLike"] = createReactRootLike;
 const ReactDOM = __webpack_require__(1)
-let createRoot = null
-const ReactDOMClient = __webpack_require__(14)
-createRoot = ReactDOMClient.createRoot
+var ReactDOMClient = ReactDOM
+
+// React 18+.
+const supportsReactCreateRoot = ReactDOM.version && parseInt(ReactDOM.version.split('.')[0], 10) >= 18;
+if (supportsReactCreateRoot) {
+  // This will never throw an exception, but it's the way to tell Webpack the dependency is optional
+  // https://github.com/webpack/webpack/issues/339#issuecomment-47739112
+  // Unfortunately, it only converts the error to a warning.
+  try {
+    // eslint-disable-next-line global-require,import/no-unresolved
+    ReactDOMClient = __webpack_require__(14)
+  } catch (e) {
+    // We should never get here, but if we do, we'll just use the default ReactDOM
+    // and live with the warning.
+    ReactDOMClient = ReactDOM;
+  }
+}
 
 function supportsHydration() {
-  return typeof ReactDOM.hydrate === "function" || typeof ReactDOM.hydrateRoot === "function"
+  return typeof ReactDOM.hydrate === "function" || typeof ReactDOMClient.hydrateRoot === "function"
 }
 
 function reactHydrate(node, component) {
-  if (typeof ReactDOM.hydrateRoot === "function") {
-    return ReactDOM.hydrateRoot(node, component)
+  if (typeof ReactDOMClient.hydrateRoot === "function") {
+    return ReactDOMClient.hydrateRoot(node, component)
   } else {
     return ReactDOM.hydrate(component, node)
   }
 }
 
 function createReactRootLike(node) {
-  return createRoot ? createRoot(node) : legacyReactRootLike(node)
+  return ReactDOMClient.createRoot ? ReactDOMClient.createRoot(node) : legacyReactRootLike(node)
 }
 
 function legacyReactRootLike(node) {
@@ -563,6 +577,7 @@ module.exports = function(reqctx) {
 /* 14 */
 /***/ (function(module, exports) {
 
+if(typeof __WEBPACK_EXTERNAL_MODULE_14__ === 'undefined') {var e = new Error("Cannot find module \"undefined\""); e.code = 'MODULE_NOT_FOUND'; throw e;}
 module.exports = __WEBPACK_EXTERNAL_MODULE_14__;
 
 /***/ })
